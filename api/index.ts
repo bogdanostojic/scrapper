@@ -1,7 +1,9 @@
-const express = require("express");
+
+import express from 'express'
+import { startup } from './src/startup/routes';
 const app = express();
 
-require("./src/startup/routes")(app);
+startup(app);
 
 const port = process.env.PORT || 3000;
 
