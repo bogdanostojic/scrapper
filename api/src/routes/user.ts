@@ -4,6 +4,10 @@ export const userRouter = express.Router();
 
 import { addJob } from '../controllers/user';
 
-userRouter.post('/addJob', addJob);
+async function publishMiddleware(eventName: string, payload: Record<string, any>): Promise<void> {
 
-// module.exports = { userRouter };
+    
+}
+
+
+userRouter.post('/addJob', addJob);
