@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { User } from "../models/user/user.model";
 import { UserDocument } from "../models/user/schema/user"
+import { getChannel } from "../config/rabbitmq";
 
 export async function addJob(req: Request, res: Response, next: (param: any) => void) {
     const { email, password } = req.query;
@@ -15,5 +16,7 @@ export async function addJob(req: Request, res: Response, next: (param: any) => 
     }
     console.log(user);
     console.log(req.body);
+    getChannel().sendToQueue('task', Buffer.from(JSON.stringify({ email, password })), { persistent: true})
+    
     return res.send(user).json()
 };
