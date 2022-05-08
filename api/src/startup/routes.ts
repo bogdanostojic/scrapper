@@ -3,12 +3,12 @@ import { userRouter } from '../routes/user';
 import mongoose from "mongoose";
 import { connectionString } from "../config/database";
 import redis, { RedisClientType } from 'redis';
-function errorHandler(err: Error, req: Request, res: Response, next: Function ) {
+function errorHandler(error: Error, req: Request, res: Response, next: Function ) {
   
-  if(!err) return;
-  
-  console.log('middleware', err)
-  return res.send({error: err}).json();
+  if(!error) return;
+  const { message } = error;
+  console.error('Error stack trace:', error)
+  return res.send({error: message}).json();
 }
 
 export async function startup (app: Express) {

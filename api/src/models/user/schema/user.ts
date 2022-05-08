@@ -6,8 +6,6 @@ const options = {
     timestamps: true
 }
 
-
-
 export const UserSchema = new Schema<User>({ 
     email: { type: String, required: true },
     password: { type: String, required: true },
