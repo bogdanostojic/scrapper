@@ -1,0 +1,21 @@
+version: '3.2'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.10.0-management-alpine
+    container_name: 'rabbitmq_managment'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
+  mongodb:
+    image: mongo:latest
+    container_name: 'db_mongodb'
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-volume:/data/db
+  

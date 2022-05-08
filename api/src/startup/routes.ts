@@ -1,15 +1,8 @@
-import express, { Express, Request, Response } from "express";
-import { userRouter } from '../routes/user';
+import express, { Express } from "express";
 import mongoose from "mongoose";
+import { userRouter } from '../routes/user';
 import { connectionString } from "../config/database";
-import redis, { RedisClientType } from 'redis';
-function errorHandler(error: Error, req: Request, res: Response, next: Function ) {
-  
-  if(!error) return;
-  const { message } = error;
-  console.error('Error stack trace:', error)
-  return res.send({error: message}).json();
-}
+import { errorHandler } from "../middleware/error";
 
 export async function startup (app: Express) {
 
