@@ -18,11 +18,11 @@ export async function amqplibConnection() {
             console.log(msg)
             return;
         }
-        const { email }  = JSON.parse(msg.content.toString('utf-8'));
+        const { email, error }  = JSON.parse(msg.content.toString('utf-8'));
 
         console.log('deleting', `${email}`);
+        // await ErrorModel.findOneAndUpdate({ email }, { error });
         await User.deleteOne( { email });
-        channel.ack(msg)
     })
 }
 

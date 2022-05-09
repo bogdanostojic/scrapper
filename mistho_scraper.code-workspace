@@ -8,45 +8,16 @@
 		}
 	],
 	"launch": {
-		"version": "0.2.0",
-		"configurations": [
-
-			{
-				"type": "pwa-node",
-				"request": "launch",
-				"name": "API",
-				"skipFiles": [
-					"<node_internals>/**"
-				],
-				"__workspaceFolder": "${cwd}\\api",
-				"program": "${workspaceFolder}\\index.ts",
-				"runtimeArgs": ["-r", "ts-node/register", "-r", "tsconfig-paths/register"],
-				"outFiles": [
-					"${workspaceFolder}/**/*.js"
-				]
-			},
-			{
-				"type": "pwa-node",
-				"request": "launch",
-				"name": "Workers",
-				"skipFiles": [
-					"<node_internals>/**"
-				],
-				"__workspaceFolder": "${cwd}\\workers",
-				"program": "${workspaceFolder}\\index.ts",
-				"runtimeArgs": ["-r", "ts-node/register", "-r", "tsconfig-paths/register"],
-				"outFiles": [
-					"${workspaceFolder}/**/*.js"
-				]
-			}
-		]
-		,
+		"configurations": [], // This line was needed
 		"compounds": [
-			{
-				"name": "launch apps",
-				"configurations": ["API", "Workers"]
-			}
+		  {
+			"name": "API Server & Worker",
+			"configurations": [
+			  "Start API",
+			  "Start Worker"
+			]
+		  }
 		]
-	}
+	  }
 	
 }

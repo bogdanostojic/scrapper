@@ -6,7 +6,6 @@ import path from 'path';
 import { UserDocument } from './src/startup/models/user/schema/user';
 import { User } from './src/startup/models/user/user.model';
 
-
 const url =  process.env.DATABSE_URL || 'localhost';
 const port =  process.env.DATABSE_PORT || '27017';
 const database =  process.env.DATABSE_DB || 'test';
@@ -27,11 +26,6 @@ const consumeTask = async () => {
     await channel.assertQueue('error', { durable: true });
 
     channel.prefetch(1);
-    console.log('waiting for messages');
-    
-    
-      console.log('heey')
-
     channel.consume('task', async msg => {
         if(!msg) {
             console.log('msg is null');
@@ -41,16 +35,14 @@ const consumeTask = async () => {
         const { email, password }  = JSON.parse(msg.content.toString('utf-8'));
         
         await (async () => {
-            const browser = await chromium.launch({ headless: true });
+            const browser = await chromium.launch({ headless: false });
             const context = await browser.newContext({ acceptDownloads: true })
             const page = await context.newPage();
             await page.goto(`https://www.glassdoor.com`);
     
-            // await page.waitForNavigation();
             const signinbuttonclass = `.d-none .LockedHomeHeaderStyles__signInButton`;
             const signInPopup = `[name=emailSignInForm] button`
             await page.click(signinbuttonclass);
-            // await page.evaluate((signinbuttonclass) => document.querySelector(signinbuttonclass).click(), signinbuttonclass)
             await page.waitForSelector('#modalUserEmail')
     
             await page.type('#modalUserEmail', `${email}`);
@@ -65,13 +57,10 @@ const consumeTask = async () => {
                 await browser.close();
                 return;
             }
-            // // await page.evaluate((t) => document.querySelector(t).click(), signInPopup);
-            // const url = await page.url();
-
-            // await page.waitForNavigation();
             await page.goto(`https://www.glassdoor.com/member/profile/index.htm`);
     
             const popups = await page.$$(`.BadgeModalStyles__closeBtn___3Uha1`);
+            await page.waitForTimeout(2000);
     
             await Promise.all( popups.map( async ( p ) => {
                 if(await p.isVisible()) {
@@ -149,8 +138,6 @@ const consumeTask = async () => {
                 }
             }))
 
-            console.log(skills)
-
               const details = {
                   about,
                   experience,
@@ -164,8 +151,6 @@ const consumeTask = async () => {
               channel.ack(msg)
             })
           })();
-    
-
 
     }, { noAck: false})
 }

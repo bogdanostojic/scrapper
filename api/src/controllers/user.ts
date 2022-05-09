@@ -3,8 +3,9 @@ import { User } from "../models/user/user.model";
 import { UserDocument } from "../models/user/schema/user"
 import { getChannel } from "../config/rabbitmq";
 
-export async function addJob(req: Request, res: Response, next: (param: any) => void) {
-    const { email, password } = req.query;
+export async function create(req: Request, res: Response, next: (param: any) => void) {
+    const { email } = req.query;
+    let { password } = req.query as { [k: string]: string };
     if(!email || !password) return res.send(`Must enter email and password`);
 
     let user: UserDocument;
@@ -14,9 +15,12 @@ export async function addJob(req: Request, res: Response, next: (param: any) => 
         next(error);
         return;
     }
-    console.log(user);
-    console.log(req.body);
     getChannel().sendToQueue('task', Buffer.from(JSON.stringify({ email, password })), { persistent: true})
-    
     return res.send(user).json()
 };
+
+export async function getAll(req: Request, res: Response, next: (param: any) => void) {
+    const { email } = req.query;
+    const users = await User.find( email ? { email } : {}).exec();
+    return res.send(users).json();
+}

@@ -2,6 +2,8 @@ import express from 'express'
 
 export const userRouter = express.Router();
 
-import { addJob } from '../controllers/user';
+import { create, getAll } from '../controllers/user';
 
-userRouter.post('/addJob', addJob);
+userRouter.post('/create', create);
+userRouter.get('/', getAll);
+

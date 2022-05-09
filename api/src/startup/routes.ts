@@ -10,6 +10,6 @@ export async function startup (app: Express) {
   await mongoose.connect(connectionString);
   await amqplibConnection();
   app.use(express.json());
-  app.use("/user", userRouter);
+  app.use("/users", userRouter);
   app.use(errorHandler);
 };
