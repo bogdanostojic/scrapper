@@ -59,17 +59,13 @@ const consumeTask = async () => {
                 page.waitForEvent('download'),
                 profilePageButtons[1].click()
             ])
-            await download.saveAs(path.join(__dirname, `./downloads/resume/${ email ? `${email}-${Date.now()}` : `${download.suggestedFilename().split('.pdf').join('')}-${Date.now()}`}.pdf`))
+            await download.saveAs(path.join(__dirname, `../api/downloads/resume/${email}.pdf`))
             const stream = await download.createReadStream();
             if(!stream) {
                 await browser.close();
                 return;
             }
-            var bufs: any[] = [];
-            stream.on('data', function(data){ bufs.push(data); });
             stream.on('end', async function(){
-              var buf = Buffer.concat(bufs);
-              const resume = `${base64ToPdfHeader}${Buffer.from(buf).toString('base64')}`;
 
             const about = await (await page.$(`#AboutMe p`))?.innerText();
 
@@ -129,7 +125,7 @@ const consumeTask = async () => {
                   education,
                   certiciations
               }
-              await User.findOneAndUpdate<UserDocument>({ email }, { resume, details }).exec()
+              await User.findOneAndUpdate<UserDocument>({ email }, { resume: `http://localhost:3000/users/getResume/${email}.pdf`, details }).exec()
               await browser.close()
 
               getChannel().ack(msg)

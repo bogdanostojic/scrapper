@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import { User } from "../models/user/user.model";
 import { UserDocument } from "../models/user/schema/user"
 import { getChannel } from "../config/rabbitmq";
+import path from "path";
 
 export async function create(req: Request, res: Response, next: (param: any) => void) {
-    const { email } = req.query;
-    let { password } = req.query as { [k: string]: string };
+    const { email, password } = req.query;
     if(!email || !password) return res.send(`Must enter email and password`);
 
     let user: UserDocument;
@@ -23,4 +23,13 @@ export async function getAll(req: Request, res: Response, next: (param: any) => 
     const { email } = req.query;
     const users = await User.find( email ? { email } : {}).exec();
     return res.send(users).json();
+}
+
+export async function getResume(req: Request, res: Response, next: (param: any) => void) {
+    const { email } = req.query;
+    try {
+        return res.download(path.join(__dirname, `../../downloads/resume/${email}.pdf`));
+    } catch (error) {
+        return res.send({error: `no resume found for ${email}`}).json();
+    }
 }
