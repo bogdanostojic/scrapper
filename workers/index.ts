@@ -1,6 +1,5 @@
 import { chromium } from 'playwright';
 import mongoose from 'mongoose';
-const base64ToPdfHeader = `data:application/pdf;base64,`
 import path from 'path';
 import { UserDocument } from './src/startup/models/user/schema/user';
 import { User } from './src/startup/models/user/user.model';
@@ -65,7 +64,6 @@ const consumeTask = async () => {
                 await browser.close();
                 return;
             }
-            stream.on('end', async function(){
 
             const about = await (await page.$(`#AboutMe p`))?.innerText();
 
@@ -125,11 +123,10 @@ const consumeTask = async () => {
                   education,
                   certiciations
               }
-              await User.findOneAndUpdate<UserDocument>({ email }, { resume: `http://localhost:3000/users/getResume/${email}.pdf`, details }).exec()
+              await User.findOneAndUpdate<UserDocument>({ email }, { resume: `http://localhost:3000/users/resume/${email}.pdf`, details }).exec()
               await browser.close()
 
               getChannel().ack(msg)
-            })
           })();
 
     }, { noAck: false})

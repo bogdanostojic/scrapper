@@ -6,5 +6,5 @@ import { create, getAll, getResume } from '../controllers/user';
 
 userRouter.post('/create', create);
 userRouter.get('/', getAll);
-userRouter.get('/resume', getResume);
+userRouter.get('/resume/:name', getResume);
 

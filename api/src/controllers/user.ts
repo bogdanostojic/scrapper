@@ -26,10 +26,10 @@ export async function getAll(req: Request, res: Response, next: (param: any) => 
 }
 
 export async function getResume(req: Request, res: Response, next: (param: any) => void) {
-    const { email } = req.query;
+    const { name } = req.params;
     try {
-        return res.download(path.join(__dirname, `../../downloads/resume/${email}.pdf`));
+        return res.download(path.join(__dirname, `../../downloads/resume/${name}`));
     } catch (error) {
-        return res.send({error: `no resume found for ${email}`}).json();
+        return res.send({error: `no resume found for ${name}`}).json();
     }
 }
